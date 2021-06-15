@@ -76,7 +76,11 @@ function drawHorizontalStackedBar(selector, data, chart, option) {
         .insert('g', '.y-axis')
         .append('g')
         .classed("layer", true)
-        .attr("fill", (d) => barColors(d.key))
+        .attr("fill", (d) => {
+            console.log(barColors(d.key))
+            console.log(d)
+            return barColors(d.key)
+        })
 
     const bars = container.selectAll('g.layer')
         .selectAll('rect')
@@ -103,13 +107,12 @@ function drawHorizontalStackedBar(selector, data, chart, option) {
             tooltip.style("display", 'none')
         })
         .on("mousemove", function(event, d) {
-
-            const xPosition = event.x - (400 * xFactor);
-            const yPosition = event.y - (20 * yFactor);
+            const xPosition = event.layerX
+            const yPosition = event.layerY
             const data = d.data
-            // console.log(data)
+            console.log({d})
             tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
-            tooltip.select("text").text(`${d}`);
+            tooltip.select("text").text(`${JSON.stringify(data)}`);
         })
 
     // tooltip
@@ -150,7 +153,7 @@ function drawHorizontalStackedBar(selector, data, chart, option) {
         .attr('height', 20 * yFactor)
         .attr('rx', 5 * xFactor)
         .attr('ry', 5 * yFactor)
-        .style('fill', (d, i) => chart.colors.slice().reverse()[i])
+        .style('fill', (d, i) => chart.colors.slice()[i])
     
     legend.append('text')
         .attr('x', 25 * xFactor)
@@ -177,7 +180,7 @@ const data = [
     { year: "2016", redDelicious: "19", mcintosh: "17", oranges: "5", pears: "7" },
   ]
 const subjects = ["redDelicious", "mcintosh", "oranges", "pears"]
-const colors = ["b33040", "#d25c4d", "#f2b447", "#d9d574"]
+const colors = ["red", "tomato", "yellow", "green"]
 
 const data2 = [
     {
@@ -205,6 +208,7 @@ const data2 = [
 const subjects2 = ["Under 5 Years", "5 to 13 Years", "14 to 17 Years"]
 const colors2 = ["steelblue", "darkorange", "lightblue"]
 
+console.log({data, subjects, colors})
 drawHorizontalStackedBar("#arvis", data, {
     y: 'year',
     subjects: subjects,
